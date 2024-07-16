@@ -1,3 +1,20 @@
+
+# To Start
+
+Navigate to /backend
+``cd .\backend\``
+Run the following command to start the backend
+``node index.ts``
+The terminal should then display a message saying the server is running on a port
+
+Then, open another terminal (Ctrl+Shift+`)
+Navigate to /frontend
+``cd .\frontend\``
+Run the following command to start the frontend
+``npm run dev``
+
+# Frontend Notes
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
