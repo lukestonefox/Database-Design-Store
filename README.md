@@ -1,17 +1,17 @@
 
 # To Start
+Ensure you've received the proper dotenv files for RDS information
 
-Navigate to /backend
+Navigate to /backend.
 ``cd .\backend\``
-Run the following command to start the backend
+Run the following command to start the backend.
 ``node index.ts``
-The terminal should then display a message saying the server is running on a port
+The terminal should then display a message saying the server is running on a port.
 
-Then, open another terminal (Ctrl+Shift+`)
-Navigate to /frontend
+Then, open another terminal (Ctrl+Shift+`).
+Navigate to /frontend.
 ``cd .\frontend\``
-Run the following command to start the frontend
-``npm run dev``
+Then run ``npm run dev``
 
 # Frontend Notes
 
