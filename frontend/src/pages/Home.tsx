@@ -6,13 +6,13 @@ const Home: React.FC = () => {
     const [version, setVersion] = useState('' as string)
 
   function getVersion() {
-    fetch('http://localhost:3001')
+    fetch('/api')
       .then(response => response.json())
       .then(data => setVersion(data))
       .then(data => console.log(data))
       .then(() => console.log(version)), {mode: 'no-cors'}
-
   }
+
     return (
       <div className="flex flex-col items-center justify-between w-full h-full">
         <p className="">Store?</p>

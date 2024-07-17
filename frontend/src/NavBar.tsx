@@ -3,10 +3,13 @@ import React from "react";
 const NavBar: React.FC = () => {
     return (
         <header>
-            <nav className="h-4 bg-blue-400">
-                <div>
-                    <a href="/home" className="text-white">Home</a>
-                    <a href="/profile" className="text-white">Profile</a>
+            <nav className="flex h-12 bg-blue-400">
+                <div className="flex items-center justify-between w-full px-6">
+                    <a href="/home" className="px-4 text-white">Home</a>
+                    <a href="/warehouse" className="px-4 text-white">Warehouse</a>
+                    <a href="/profile" className="px-4 text-white">Profile</a>
+                    <a href="/checkout" className="px-4 text-white">Checkout</a>
+                    <a href="/login" className="px-4 text-white">Login</a>
                 </div>
             </nav>
         </header>
