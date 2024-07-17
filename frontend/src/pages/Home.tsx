@@ -14,14 +14,11 @@ const Home: React.FC = () => {
 
   }
     return (
-        <>
-        <div className="flex flex-col items-center justify-between w-full h-full">
-      <p className="">Store?</p>
-      <button className="px-4 py-2 text-white bg-blue-500 rounded-md" onClick={getVersion}>Get Version</button>
-      <div>{version}</div>
-    </div>
-        </>
-        
+      <div className="flex flex-col items-center justify-between w-full h-full">
+        <p className="">Store?</p>
+        <button className="px-4 py-2 text-white bg-blue-500 rounded-md" onClick={getVersion}>Get Version</button>
+        <div>{version}</div>
+      </div>
     )
 }
 
