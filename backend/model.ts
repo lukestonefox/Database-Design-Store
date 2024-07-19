@@ -1,27 +1,16 @@
-require('dotenv').config()
-const Pool = require('pg').Pool
+require('dotenv').config();
+const {Pool} = require('pg');
 const database = new Pool({
   user: 'postgres',
-  host: process.env.RDS_HOSTNAME,
+  host: 'databaseproject.cxw8wk2w0dii.us-east-2.rds.amazonaws.com',
   database: 'DatabaseProject',
-  password: process.env.RDS_PASSWORD,
+  password: 'ILoveDatabaseDesign7!',
   port: 5432,
+  ssl: {
+    rejectUnauthorized: false,
+  },
 });
 
-console.log(`RDS_HOSTNAME: ${process.env.RDS_HOSTNAME}`); // Run this test to ensure your .env is setup correctly
+console.log(`RDS_HOSTNAME: ${process.env.RDS_HOSTNAME}`);
 
-// Let's create some functions for queries
-const getVersion = () => {
-  return new Promise(function(resolve, reject) {
-    database.query('SELECT Version();', (err, res) => {
-      if (err) {
-        reject(err);
-      }
-      resolve(res.rows);
-    });
-  });
-};
-
-module.exports = {
-  getVersion,
-};
+module.exports = database;
