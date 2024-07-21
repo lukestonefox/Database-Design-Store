@@ -32,6 +32,15 @@ app.get('/test', async (req, res) => {
   }
 });
 
+app.get('/getLoginInfo', async (req, res) => {
+  try {
+    const response = await model.query('SELECT * FROM test;');
+    res.json(response.rows);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 app.listen(port, () => {
   console.log(`App running on port ${port}.`);
 });
