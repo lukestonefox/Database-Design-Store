@@ -11,6 +11,6 @@ const database = new Pool({
   },
 });
 
-console.log(`RDS_HOSTNAME: ${process.env.RDS_HOSTNAME}`);
+//console.log(`RDS_HOSTNAME: ${process.env.RDS_HOSTNAME}`);
 
 module.exports = database;
