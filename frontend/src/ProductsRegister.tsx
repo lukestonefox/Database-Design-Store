@@ -1,42 +1,77 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsisV, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import { Product } from "./types";
+import EditProductModal from "./EditProductModal";
+import EditProductForm from "./EditProductForm";
 
-const ProductsRegister = () => {
+interface ProductsRegisterProps {
+    products: Product[];
+}
+
+const ProductsRegister: React.FC<ProductsRegisterProps> = ({products}) => {
     const [searchQuery, setSearchQuery] = useState('');
-    const [items, setItems] = useState([
-        {id: 1, name: 'Stuffed Bear', price: 20, type: 'Toy', brand: 'LotFancy', size: 'M', description: 'A brown, medium sized stuffed toy bear'},
-        {id: 2, name: 'Apple', price: 3, type: 'Food', brand: 'Honeycrisp', size: 'S', description: 'A normal sized honeycrisp apple'},
-        {id: 3, name: 'PS5', price: 499.99, type: 'Gaming', brand: 'Sony', size: null, description: 'A gaming console by Sony'}
-      ]);
+    const [items, setItems] = useState<Product[]>(products);
+    const [menuVisible, setMenuVisible] = useState<Product | null>(null)
+    const [menuPosition, setMenuPosition] = useState<{top: number; left: number} | null>(null);
+    const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+    const [editProductModalOpen, setModalOpen] = useState(false);
 
-    const [menuVisible, setMenuVisible] = useState(null);
+    useEffect(() => {
+        setItems(products);
+    }, [products]);
 
     const handleSearch = (event: any) => {
         setSearchQuery(event.target.value);
     };
 
-    const handleIconCLick = (item: any) => {
+    const handleIconCLick = (event: React.MouseEvent<HTMLTableDataCellElement, MouseEvent>, item: Product) => {
+        const rect = event.currentTarget.getBoundingClientRect();
+        setMenuPosition({top: rect.bottom, left: rect.left});
+        setMenuVisible(menuVisible === item ? null : item);
+    };
+
+    const handleAdd = (item: Product) => {
         setMenuVisible(menuVisible === item ? null : item)
     };
 
-    const handleAdd = (item: any) => {
-        setMenuVisible(menuVisible === item ? null : item)
+    const handleEdit = (item: Product) => {
+        setMenuVisible(menuVisible === item ? null : item);
+        openEditProduct(item);
     };
 
-    const filteredItems = items.filter((item) =>
-        item.id.toString().toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    const filteredItems = items?.filter((item) =>
+        item.productid.toString().toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.productname.toLowerCase().includes(searchQuery.toLowerCase()) ||
         item.price.toString().toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.type.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.producttype.toLowerCase().includes(searchQuery.toLowerCase()) ||
         item.brand.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.size?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.productsize?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         item.description.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
-    const itemSelected = (item: any) => {
-        console.log(item);
+    const itemSelected = (item: Product) => {
+        // console.log(item);
     };
+
+    const openEditProduct = (product: Product) => {
+        setSelectedProduct(product);
+        setModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setModalOpen(false);
+        setSelectedProduct(null);
+    };
+
+    const closeEditProduct = (updatedProduct: Product) => {
+        setItems(prevItems => prevItems.map(item => item.productid === updatedProduct.productid ? updatedProduct : item));
+        closeModal();
+    };
+
+    const handleCancel = () => {
+        closeModal();
+    }
 
     const rowStyle = {
         transition: 'background-color 0.3s ease',
@@ -46,13 +81,16 @@ const ProductsRegister = () => {
         backgroundColor: '#f0f0f0',
     };
 
-    const menuStyle = {
+    const menuStyle: React.CSSProperties = {
         position: 'absolute',
         backgroundColor: 'white',
         border: '1px solid #ddd',
         borderRadius: '4px',
         boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
         zIndex: 1000,
+        display: menuVisible ? 'block' : 'none',
+        top: menuPosition?.top,
+        left: menuPosition?.left,
     };
 
     return (
@@ -84,24 +122,19 @@ const ProductsRegister = () => {
                             onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ''}
                             onClick={() => itemSelected(item)}
                         >
-                            <td style={{border: '1px solid #ddd', padding: '8px'}}>{item.id}</td>
-                            <td style={{border: '1px solid #ddd', padding: '8px'}}>{item.name}</td>
+                            <td style={{border: '1px solid #ddd', padding: '8px'}}>{item.productid}</td>
+                            <td style={{border: '1px solid #ddd', padding: '8px'}}>{item.productname}</td>
                             <td style={{border: '1px solid #ddd', padding: '8px'}}>${item.price}</td>
-                            <td style={{border: '1px solid #ddd', padding: '8px'}}>{item.type}</td>
+                            <td style={{border: '1px solid #ddd', padding: '8px'}}>{item.producttype}</td>
                             <td style={{border: '1px solid #ddd', padding: '8px'}}>{item.brand}</td>
-                            <td style={{border: '1px solid #ddd', padding: '8px'}}>{item.size}</td>
+                            <td style={{border: '1px solid #ddd', padding: '8px'}}>{item.productsize}</td>
                             <td style={{border: '1px solid #ddd', padding: '8px'}}>{item.description}</td>
-                            <td style={{border: '1px solid #ddd', padding: '8px', textAlign: 'center'}}>
-                                <FontAwesomeIcon icon={faEllipsisV} onClick={() => handleIconCLick(item)}/>
+                            <td style={{border: '1px solid #ddd', padding: '8px', textAlign: 'center'}} onClick={(e) => handleIconCLick(e, item)}>
+                                <FontAwesomeIcon icon={faEllipsisV} />
                                 {menuVisible === item && (
-                                    <div style={{position: 'absolute', 
-                                        backgroundColor: 'white', 
-                                        border: '1px solid #ddd',
-                                        borderRadius: '4px',
-                                        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
-                                        zIndex: 1000, 
-                                        top: '100%'}}>
+                                    <div style={menuStyle}>
                                         <div style={{padding: '8px', cursor: 'pointer'}} onClick={() => handleAdd(item)}>Add to Order</div>
+                                        <div style={{padding: '8px', cursor: 'pointer'}} onClick={() => handleEdit(item)}>Edit Item</div>
                                     </div>
                                 )}
                             </td>
@@ -109,6 +142,16 @@ const ProductsRegister = () => {
                     )}
                 </tbody>
             </table>
+            
+            <EditProductModal isOpen={editProductModalOpen} onClose={closeModal}>
+                    {selectedProduct && (
+                        <EditProductForm
+                            product={selectedProduct}
+                            onSave={closeEditProduct}
+                            onCancel={handleCancel}
+                        />
+                    )}
+            </EditProductModal>
         </div>
     )
 };

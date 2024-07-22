@@ -141,3 +141,14 @@ app.delete('/customer/:customerid', async (req, res) => {
 app.listen(port, () => {
   console.log(`App running on port ${port}.`);
 });
+
+
+//Products endpoints
+app.get('/product', async (req, res) => {
+  try {
+    const response = await model.query('SELECT * FROM product;');
+    res.json(response.rows);
+  } catch (error) {
+    console.log(error);
+  }
+});
