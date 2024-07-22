@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import ProductsRegister from "../ProductsRegister";
 
 const Home: React.FC = () => {
   const [version, setVersion] = useState<string>('');
@@ -19,13 +20,14 @@ const Home: React.FC = () => {
       .catch(error => console.error('There was a problem with the fetch operation:', error));
   };
 
-  return (
-    <div className="flex flex-col items-center justify-between w-full h-screen">
-      <div><h1 className="">Store?</h1></div>
-      <button className="px-4 py-2 text-white bg-blue-500 rounded-md" onClick={getVersion}>
-        Get Version
-      </button>
-      <div>{version}</div>
+  return (  
+    <div>
+      <div>
+        <h1 style={{fontWeight: 'bold', fontSize: '32px', paddingTop: '50px'}}>Products:</h1>
+      </div>
+      <div style={{paddingLeft: '20px'}}>
+        <ProductsRegister></ProductsRegister>
+      </div>
     </div>
   );
 };
