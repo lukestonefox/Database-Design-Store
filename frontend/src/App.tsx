@@ -5,6 +5,7 @@ import NavBar from './NavBar';
 import Login from './pages/Login';
 import Warehouse from './pages/Warehouse';
 import Checkout from './pages/Checkout';
+import CreateAccount from './pages/CreateAccount';
 
 const Content: React.FC = () => {
   return (
@@ -16,6 +17,7 @@ const Content: React.FC = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/warehouse" element={<Warehouse />} />
         <Route path="/checkout" element={<Checkout />} />
+        <Route path="/createAccount" element={<CreateAccount />} />
       </Routes>
     </Router>
   )

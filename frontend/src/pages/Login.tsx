@@ -5,7 +5,7 @@ const Login: React.FC = () => {
     const [password, setPassword] = useState<string>('');
 
     const getLogin = () => {
-        fetch('http://localhost:3000/version')
+        fetch('http://localhost:3000/getLoginInfo')
       .then(response => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
@@ -38,11 +38,14 @@ const Login: React.FC = () => {
                     value={password}
                     placeholder="Enter your password here"
                     onChange={(ev) => setPassword(ev.target.value)}
-                    className={'inputBox'}
+                    className="w-100"
                 />
             </div>
             <div className={'inputContainer'}>
                 <input className="px-4 py-2 text-white bg-blue-500 rounded-md" type="button" onClick={getLogin} value={'Log in'} />
+            </div>
+            <div>
+                <p>Don't have an account? <a href="/createAccount" className="text-red-500">Create one!</a></p>
             </div>
         </div>
 
