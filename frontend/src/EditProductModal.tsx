@@ -1,3 +1,5 @@
+import { faX } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
@@ -34,7 +36,7 @@ const EditProductModal: React.FC<ModalProps> = ({ isOpen, onClose, children }) =
         position: 'absolute',
         top: '10px',
         right: '10px',
-        backgroundColor: 'red',
+        backgroundColor: 'grey',
         color: 'white',
         border: 'none',
         borderRadius: '4px',
@@ -44,7 +46,9 @@ const EditProductModal: React.FC<ModalProps> = ({ isOpen, onClose, children }) =
     return ReactDOM.createPortal(
         <div style={modalStyle}>
             <div style={modalContent}>
-                <button onClick={onClose} style={buttonStyle}>Close</button>
+                <button onClick={onClose} style={buttonStyle}>
+                    <FontAwesomeIcon icon={faX} />
+                </button>
                 {children}
             </div>
         </div>,

@@ -29,6 +29,7 @@ const EditProductForm: React.FC<EditProductFormProps> = ({ product, onSave, onCa
                     name="productname"
                     value={formState.productname}
                     onChange={handleChange}
+                    style={{paddingLeft: '10px'}}
                 />
             </div>
             <div>
@@ -38,6 +39,7 @@ const EditProductForm: React.FC<EditProductFormProps> = ({ product, onSave, onCa
                     name="price"
                     value={formState.price}
                     onChange={handleChange}
+                    style={{paddingLeft: '10px'}}
                 />
             </div>
             <div>
@@ -47,6 +49,7 @@ const EditProductForm: React.FC<EditProductFormProps> = ({ product, onSave, onCa
                     name="producttype"
                     value={formState.producttype}
                     onChange={handleChange}
+                    style={{paddingLeft: '10px'}}
                 />
             </div>
             <div>
@@ -56,6 +59,7 @@ const EditProductForm: React.FC<EditProductFormProps> = ({ product, onSave, onCa
                     name="brand"
                     value={formState.brand}
                     onChange={handleChange}
+                    style={{paddingLeft: '10px'}}
                 />
             </div>
             <div>
@@ -65,18 +69,22 @@ const EditProductForm: React.FC<EditProductFormProps> = ({ product, onSave, onCa
                     name="productsize"
                     value={formState.productsize || ''}
                     onChange={handleChange}
+                    style={{paddingLeft: '10px'}}
                 />
             </div>
-            <div>
+            <div style={{display: 'flex', alignItems: 'center'}}>
                 <label>Description:</label>
                 <textarea
                     name="description"
                     value={formState.description}
                     onChange={handleChange}
+                    style={{paddingLeft: '10px', alignContent: 'left'}}
                 />
             </div>
-            <button type="submit">Save</button>
-            <button type="button" onClick={onCancel}>Cancel</button>
+            <div style={{float: 'right', paddingTop: '10px'}}>
+                <button type="submit" style={{paddingRight: '10px'}}>Save</button>
+                <button type="button" onClick={onCancel}>Cancel</button>
+            </div>
         </form>
     );
 };

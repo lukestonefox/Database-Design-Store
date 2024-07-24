@@ -64,8 +64,27 @@ const ProductsRegister: React.FC<ProductsRegisterProps> = ({products}) => {
         setSelectedProduct(null);
     };
 
-    const closeEditProduct = (updatedProduct: Product) => {
-        setItems(prevItems => prevItems.map(item => item.productid === updatedProduct.productid ? updatedProduct : item));
+    const closeEditProduct = async (updatedProduct: Product) => {
+        try {
+            const response = await fetch(`http://localhost:3000/product/${updatedProduct.productid}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(updatedProduct)
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to update product')
+            }
+
+            const updatedProductFromServer = await response.json();
+
+            setItems(prevItems => prevItems.map(item => item.productid === updatedProductFromServer.productid ? updatedProductFromServer : item));
+            setSelectedProduct(null);
+        } catch (error) {
+            console.error('Error updating product', error);
+        }
         closeModal();
     };
 
