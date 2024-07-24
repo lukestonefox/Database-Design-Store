@@ -7,9 +7,10 @@ import EditProductForm from "./EditProductForm";
 
 interface ProductsRegisterProps {
     products: Product[];
+    addToOrder: (product: Product) => void;
 }
 
-const ProductsRegister: React.FC<ProductsRegisterProps> = ({products}) => {
+const ProductsRegister: React.FC<ProductsRegisterProps> = ({products, addToOrder}) => {
     const [searchQuery, setSearchQuery] = useState('');
     const [items, setItems] = useState<Product[]>(products);
     const [menuVisible, setMenuVisible] = useState<Product | null>(null)
@@ -32,7 +33,9 @@ const ProductsRegister: React.FC<ProductsRegisterProps> = ({products}) => {
     };
 
     const handleAdd = (item: Product) => {
-        setMenuVisible(menuVisible === item ? null : item)
+        console.log(`Adding ${item} to order in handleAdd`);
+        addToOrder(item);
+        setMenuVisible(menuVisible === item ? null : item);
     };
 
     const handleEdit = (item: Product) => {

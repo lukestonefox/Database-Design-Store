@@ -2,7 +2,11 @@ import React, { useState } from "react";
 import ProductsRegister from "../ProductsRegister";
 import { Product } from "../types";
 
-const Home: React.FC = () => {
+interface HomeProps {
+  addToOrder: (product: Product) => void;
+}
+
+const Home: React.FC<HomeProps> = ({ addToOrder }) => {
   const [products, setProducts] = useState<Product[]>([])
 
   const getProducts = () => {
@@ -26,7 +30,7 @@ const Home: React.FC = () => {
         <button className="px-4 py-2 text-white bg-blue-500 rounded-md" onClick={getProducts}>Get Products</button>
       </div>
       <div style={{paddingLeft: '20px'}}>
-        <ProductsRegister products={products}></ProductsRegister>
+        <ProductsRegister products={products} addToOrder={addToOrder}></ProductsRegister>
       </div>
     </div>
   );
