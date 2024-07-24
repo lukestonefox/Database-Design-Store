@@ -21,7 +21,7 @@ const Login: React.FC = () => {
     };
 
     return (
-        <div className="flex flex-col space-y-5 h-screen items-center justify-center text-center">
+        <div className="flex flex-col space-y-5 h-screen items-center justify-center text-center text-xl">
             <h1 className='font-bold'>
                 Welcome! Please log in.
             </h1>
