@@ -295,7 +295,7 @@ app.delete('/orders/:orderid', async (req, res) => {
 //Product table endpoints
 app.get('/product', async (req, res) => {
   try {
-    const response = await model.query('SELECT * FROM product;');
+    const response = await model.query('SELECT * FROM product ORDER BY productid ASC;');
     res.json(response.rows);
   } catch (error) {
     console.log(error);
@@ -607,26 +607,4 @@ app.delete('/warehouse/:warehouseid', async (req, res) => {
 
 app.listen(port, () => {
   console.log(`App running on port ${port}.`);
-});
-
-
-//Products endpoints
-app.get('/product', async (req, res) => {
-  try {
-    const response = await model.query('SELECT * FROM product ORDER BY productid ASC;');
-    res.json(response.rows);
-  } catch (error) {
-    console.log(error);
-  }
-});
-
-app.put('/product/:productid', async (req, res) => {
-  try {
-    const { productid } = req.params;
-    const { productname, price, producttype, brand, productsize, description } = req.body;
-    const response = await model.query('UPDATE product SET productname = $1, price = $2, producttype = $3, brand = $4, productsize = $5, description = $6 WHERE productid = $7 RETURNING *;', [productname, price, producttype, brand, productsize, description, productid]);
-    res.json(response.rows[0]);
-  } catch (error) {
-    console.log(error);
-  }
 });
