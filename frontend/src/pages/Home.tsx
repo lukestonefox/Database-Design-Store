@@ -1,31 +1,33 @@
 import React, { useState } from "react";
+import ProductsRegister from "../ProductsRegister";
+import { Product } from "../types";
 
 const Home: React.FC = () => {
-  const [version, setVersion] = useState<string>('');
+  const [products, setProducts] = useState<Product[]>([])
 
-  const getVersion = () => {
-    fetch('http://localhost:3000/version')
+  const getProducts = () => {
+    fetch('http://localhost:3000/product')
       .then(response => {
         if (!response.ok) {
-          throw new Error('Network response was not ok');
+          throw new Error('Network response was not ok')
         }
-        console.log(response);
         return response.json();
       })
       .then(data => {
-        setVersion(data[0].version); // Adjust based on your response structure
-        console.log(data[0].version);
+        setProducts(data);
+        console.log(data);
       })
       .catch(error => console.error('There was a problem with the fetch operation:', error));
   };
 
-  return (
-    <div className="flex flex-col items-center justify-between w-full h-screen">
-      <div><h1 className="">Store?</h1></div>
-      <button className="px-4 py-2 text-white bg-blue-500 rounded-md" onClick={getVersion}>
-        Get Version
-      </button>
-      <div>{version}</div>
+  return (  
+    <div style={{paddingTop: '50px'}}>
+      <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+        <button className="px-4 py-2 text-white bg-blue-500 rounded-md" onClick={getProducts}>Get Products</button>
+      </div>
+      <div style={{paddingLeft: '20px'}}>
+        <ProductsRegister products={products}></ProductsRegister>
+      </div>
     </div>
   );
 };
