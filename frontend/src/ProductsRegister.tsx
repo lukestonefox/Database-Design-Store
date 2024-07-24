@@ -40,6 +40,20 @@ const ProductsRegister: React.FC<ProductsRegisterProps> = ({products}) => {
         openEditProduct(item);
     };
 
+    const addProduct = () => {
+        const newProduct: Product = {
+            productid: 0,
+            productname: '',
+            price: 0,
+            producttype: '',
+            brand: '',
+            productsize: '',
+            description: '',
+        };
+        setSelectedProduct(newProduct);
+        setModalOpen(true);
+    }
+
     const filteredItems = items?.filter((item) =>
         item.productid.toString().toLowerCase().includes(searchQuery.toLowerCase()) ||
         item.productname.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -65,26 +79,47 @@ const ProductsRegister: React.FC<ProductsRegisterProps> = ({products}) => {
     };
 
     const closeEditProduct = async (updatedProduct: Product) => {
-        try {
-            const response = await fetch(`http://localhost:3000/product/${updatedProduct.productid}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(updatedProduct)
-            });
+        if (updatedProduct.productid === 0) {
+            let newProduct: Product;
+            try {
+                const response = await fetch ('http://localhost:3000/product/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(updatedProduct),
+                });
 
-            if (!response.ok) {
-                throw new Error('Failed to update product')
+                if (!response.ok) {
+                    throw new Error('Failed to add new product');
+                }
+                
+                newProduct = await response.json();
+            } catch (error) {
+                console.error('Error adding a new product', error);
             }
 
-            const updatedProductFromServer = await response.json();
-
-            setItems(prevItems => prevItems.map(item => item.productid === updatedProductFromServer.productid ? updatedProductFromServer : item));
-            setSelectedProduct(null);
-        } catch (error) {
-            console.error('Error updating product', error);
+            setItems((prevItems) => [...prevItems, newProduct]);
+        } else {
+            try {
+                const response = await fetch(`http://localhost:3000/product/${updatedProduct.productid}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(updatedProduct)
+                });
+    
+                if (!response.ok) {
+                    throw new Error('Failed to update product')
+                }
+    
+                const updatedProductFromServer = await response.json();
+    
+                setItems(prevItems => prevItems.map(item => item.productid === updatedProductFromServer.productid ? updatedProductFromServer : item));
+            } catch (error) {
+                console.error('Error updating product', error);
+            }
         }
+        setSelectedProduct(null);
         closeModal();
     };
 
@@ -114,13 +149,16 @@ const ProductsRegister: React.FC<ProductsRegisterProps> = ({products}) => {
 
     return (
         <div style={{paddingLeft: '1rem', marginRight: '1rem'}}>
-            <input
-                type="text"
-                placeholder="Search products..."
-                style = {{border: '2px solid #ddd'}}
-                value={searchQuery}
-                onChange={handleSearch}
-            />
+            <div style={{display: 'flex', flexDirection: 'row', gap: '40px'}}>
+                <input
+                    type="text"
+                    placeholder="Search products..."
+                    style = {{border: '2px solid #ddd', height: 'fit-content'}}
+                    value={searchQuery}
+                    onChange={handleSearch}
+                />
+                <button className="px-4 py-2 text-white bg-blue-500 rounded-md" onClick={addProduct}>Add Product</button>
+            </div>
             <table style={{width: '100%', borderCollapse: 'collapse', marginTop: '1rem'}}>
                 <thead>
                     <tr>
