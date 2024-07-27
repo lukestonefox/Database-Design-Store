@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Customer } from "../types";
 
 const CreateAccount: React.FC = () => {
     const [name, setName] = useState<string>('');
@@ -9,6 +10,8 @@ const CreateAccount: React.FC = () => {
     const [expirationdate, setexpirationdate] = useState<string>('');
     const [cvv, setcvv] = useState<string>('');
     const [cardaddress, setcardaddress] = useState<string>('');
+    const [customer, setCustomer] = useState<Customer | null>(null);
+
 
     return (
         <div className="flex flex-col space-y-5 h-screen items-center justify-center text-center">
@@ -44,7 +47,7 @@ const CreateAccount: React.FC = () => {
                 />
             </div>
             <div className={'inputContainer'}>
-                <p>Seconday Address</p>
+                <p>Secondary Address</p>
                 <input
                     value={address2}
                     placeholder="0000 Something Rd."

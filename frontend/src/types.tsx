@@ -8,3 +8,14 @@ export interface Product {
     productsize?: string,
     description: string
 };
+
+export interface Customer {
+    customerid: number,
+    name: string,
+    password: string,
+    primaryaddress: string,
+    secondaryaddress: string,
+    balance: number,
+    creditid1: number,
+    creditid2: number
+};

@@ -41,7 +41,7 @@ const Profile: React.FC = () => {
                     <div className={'inputContainer'}>
                         <p className="pb-5">Account balance</p>
                         <input
-                            value={password}
+                            value={balance}
                             placeholder="1234"
                             className={'inputBox'}
                         />
@@ -83,7 +83,7 @@ const Profile: React.FC = () => {
                     <div className={'inputContainer'}>
                         <p className="pb-5">Expiration Date</p>
                         <input
-                            value={password}
+                            value={expirationdate}
                             placeholder="00/00"
                             onChange={(ev) => setexpirationdate(ev.target.value)}
                             className={'inputBox'}
@@ -92,7 +92,7 @@ const Profile: React.FC = () => {
                     <div className={'inputContainer'}>
                         <p className="pb-5">CVV</p>
                         <input
-                            value={password}
+                            value={cvv}
                             placeholder="000"
                             onChange={(ev) => setcvv(ev.target.value)}
                             className={'inputBox'}
@@ -103,7 +103,7 @@ const Profile: React.FC = () => {
                     <div className={'inputContainer'}>
                         <p className="pb-5">Address Linked to Credit Card</p>
                         <input
-                            value={password}
+                            value={cardaddress}
                             placeholder="9999 Something Ln."
                             onChange={(ev) => setcardaddress(ev.target.value)}
                             className={'inputBox'}
