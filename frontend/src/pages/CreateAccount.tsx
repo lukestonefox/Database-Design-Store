@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Customer } from "../types";
 
 const CreateAccount: React.FC = () => {
     const [name, setName] = useState<string>('');
@@ -9,9 +8,43 @@ const CreateAccount: React.FC = () => {
     const [cardnumber, setcardnumber] = useState<string>('');
     const [expirationdate, setexpirationdate] = useState<string>('');
     const [cvv, setcvv] = useState<string>('');
-    const [cardaddress, setcardaddress] = useState<string>('');
-    const [customer, setCustomer] = useState<Customer | null>(null);
+    const [address, setaddress] = useState<string>('');
 
+    const createAccount = () => {
+
+        fetch('http://localhost:3000/creditcard', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json'},
+            body: JSON.stringify({cardnumber, expirationdate, cvv, address})
+        })
+        .then(response => {
+            if(!response.ok) {
+                throw new Error('Network response was not ok')
+            }
+            return response.json();
+        })
+        .then(data => {
+            fetch('http://localhost:3000/customer', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json'},
+                body: JSON.stringify({customername: name, customerpassword: password, address1, address2, balance: 0, creditid1: data.creditid, creditid2: null})
+            })
+            .then(response => {
+                if(!response.ok) {
+                    throw new Error('Network response was not ok')
+                }
+                if(response.ok) {
+                    alert("You account was successfully created!");
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(data);
+            })
+            .catch(error => console.error('There was a problem with the fetch operation:', error));
+        })
+        .catch(error => console.error('There was a problem with the fetch operation:', error));
+    }
 
     return (
         <div className="flex flex-col space-y-5 h-screen items-center justify-center text-center">
@@ -83,15 +116,15 @@ const CreateAccount: React.FC = () => {
                 />
             </div>
             <div className={'inputContainer'}>
-                <p>Address Linked to Credit Card*</p>
+                <p>Address linked to Credit Card*</p>
                 <input
-                    value={cardaddress}
-                    placeholder="9999 Something Ln."
-                    onChange={(ev) => setcardaddress(ev.target.value)}
+                    value={address}
+                    placeholder="9999 Something Rd."
+                    onChange={(ev) => setaddress(ev.target.value)}
                     className={'inputBox'}
                 />
             </div>
-            <button className="px-4 py-2 text-white bg-blue-500 rounded-md">
+            <button className="px-4 py-2 text-white bg-blue-500 rounded-md" onClick={createAccount}>
                 Create Account
             </button>
         </div>
