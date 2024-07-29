@@ -20,8 +20,59 @@ app.get('/version', async (req, res) => {
     res.json(response.rows);
   } catch (error) {
     console.log(error);
+  };
+});
+
+app.post('/login', async (req, res) => {
+  try {
+    const { customername, customerpassword } = req.body;
+    const result = await model.query('SELECT * FROM customer WHERE customername = $1', [customername]);
+
+    // Is the username valid?
+    if (result.rows.length === 0) {
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+
+    const user = result.rows[0];
+    const match = user.customerpassword === customerpassword;
+
+    // Do passwords match?
+    if (!match) {
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+    
+    res.json(user);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
+
+app.post('/staffLogin', async (req, res) => {
+  try {
+    const { staffname, staffpassword } = req.body;
+    const result = await model.query('SELECT * FROM staff WHERE staffname = $1', [staffname]);
+
+    // Is the username valid?
+    if (result.rows.length === 0) {
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+
+    const user = result.rows[0];
+    const match = user.staffpassword === staffpassword;
+
+    // Do passwords match?
+    if (!match) {
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+    
+    res.json(user);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 
 app.get('/test', async (req, res) => {
   try {

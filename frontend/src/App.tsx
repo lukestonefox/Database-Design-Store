@@ -8,6 +8,8 @@ import Checkout from './pages/Checkout';
 import CreateAccount from './pages/CreateAccount';
 import { useState } from 'react';
 import { Product } from './types';
+import StaffLogin from './pages/StaffLogin';
+import { UserProvider } from './context/UserContext';
 
 const Content: React.FC = () => {
   const [order, setOrder] = useState<Product[]>([]);
@@ -31,6 +33,7 @@ const Content: React.FC = () => {
         <Route path="/warehouse" element={<Warehouse />} />
         <Route path="/checkout" element={<Checkout order={order} removeFromOrder={removeFromOrder} />} />
         <Route path="/createAccount" element={<CreateAccount />} />
+        <Route path="/staffLogin" element={<StaffLogin />} />
       </Routes>
   )
 
@@ -39,10 +42,12 @@ const Content: React.FC = () => {
 function App() {
 
   return (
-    <Router>
-      <NavBar />
-      <Content />
-    </Router>
+    <UserProvider>
+      <Router>
+        <NavBar />
+        <Content />
+      </Router>
+    </UserProvider>
   )
 }
 
