@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, redirect } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useUserContext } from "../context/UserContext";
 
 const Login: React.FC = () => {
@@ -7,6 +7,7 @@ const Login: React.FC = () => {
     const [password, setPassword] = useState<string>('');
     const [errorMessage, setErrorMessage] = useState<string>('');
     const { role, setRole } = useUserContext();
+    const navigate = useNavigate();
 
     const getLogin = () => {
         fetch('http://localhost:3000/login', {
@@ -21,7 +22,7 @@ const Login: React.FC = () => {
         }
         setErrorMessage('');
         setRole('customer');
-        redirect('/home');
+        navigate('/home');
         console.log(response);
         return response.json();
       })
@@ -51,9 +52,7 @@ const Login: React.FC = () => {
                         className="w-full bg-inherit"
                     />
                 {errorMessage.length > 0 && <p className="px-4 py-2 text-red-500 bg-red-100 rounded-md px-auto">{errorMessage}</p>}
-                <div className={'inputContainer'}>
-                    <button className="px-4 py-2 text-white duration-200 bg-blue-500 rounded-md hover:bg-blue-600" onClick={getLogin}>Log In</button>
-                </div>
+                <button className="px-4 py-2 text-white duration-200 bg-blue-500 rounded-md hover:bg-blue-600" onClick={getLogin}>Log In</button>
             </div>
             <div>Don't have an account? <Link to="/createAccount" className="p-2 text-blue-500 duration-200 rounded-md hover:bg-blue-200">Create one!</Link></div>
         </div>

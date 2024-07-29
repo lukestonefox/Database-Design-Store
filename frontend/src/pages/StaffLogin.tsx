@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import { useUserContext } from "../context/UserContext";
 
 const Login: React.FC = () => {
@@ -7,6 +7,7 @@ const Login: React.FC = () => {
     const [password, setPassword] = useState<string>('');
     const [errorMessage, setErrorMessage] = useState<string>('');
     const { role, setRole } = useUserContext();
+    const navigate = useNavigate();
 
     const getLogin = () => {
         fetch('http://localhost:3000/staffLogin', {
@@ -21,6 +22,7 @@ const Login: React.FC = () => {
         }
         setErrorMessage('');
         setRole('staff');
+        navigate('/home');
         console.log(response);
         return response.json();
       })

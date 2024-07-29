@@ -1,9 +1,16 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useUserContext } from "./context/UserContext";
 
 const NavBar: React.FC = () => {
-    const { role } = useUserContext();
+    const { role, setRole } = useUserContext();
+    const navigate = useNavigate();
+
+    function handleLogout() {
+        setRole('guest');
+        navigate('/login');
+    }
+
     if (role !== 'guest') {
         return (
             <header>
@@ -13,7 +20,7 @@ const NavBar: React.FC = () => {
                         <Link to="/warehouse" className="px-4 text-white">Warehouse</Link>
                         <Link to="/profile" className="px-4 text-white">Profile</Link>
                         <Link to="/checkout" className="px-4 text-white">Checkout</Link>
-                        <Link to="/login" className="px-4 text-white">Login</Link>
+                        <button onClick={handleLogout} className="px-4 text-white">Sign Out</button>
                     </div>
                 </nav>
             </header>
