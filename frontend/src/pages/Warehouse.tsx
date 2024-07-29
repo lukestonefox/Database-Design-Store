@@ -1,13 +1,8 @@
 import React, { useEffect, useState } from "react";
-
-interface Warehouse {
-    warehouseid: number;
-    address: string;
-    capacity: number;
-}
+import { WarehouseRow } from "../types"
 
 const Warehouse: React.FC = () => {
-    const [warehouses, setWarehouses] = useState<Warehouse[]>([]);
+    const [warehouses, setWarehouses] = useState<WarehouseRow[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 

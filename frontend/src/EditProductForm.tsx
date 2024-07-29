@@ -1,14 +1,34 @@
-import React, { useState } from "react";
-import { Product } from "./types";
+import React, { useEffect, useState } from "react";
+import { Product, WarehouseRow } from "./types";
 
 interface EditProductFormProps {
     product: Product;
-    onSave: (updatedProduct: Product) => void;
+    onSave: (updatedProduct: Product, warehouseid: number) => void;
     onCancel: () => void;
 }
 
 const EditProductForm: React.FC<EditProductFormProps> = ({ product, onSave, onCancel }) => {
     const [formState, setFormState] = useState<Product>({ ...product });
+    const [warehouses, setWarehouses] = useState<WarehouseRow[]>([]);
+    const [selectedWarehouseid, setSelectedWarehouseid] = useState<number>(-1);
+
+    useEffect(() => {
+        const fetchWarehouses = async () => {
+            try {
+                const response = await fetch('http://localhost:3000/warehouse');
+                const data = await response.json();
+                setWarehouses(data);
+            } catch (err) {
+                console.error(err);
+            }
+        };
+
+        fetchWarehouses();
+    }, []);
+
+    const handleWarehouseChange = (event: any) => {
+        setSelectedWarehouseid(parseInt(event.target.value, 10));
+    }
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -17,7 +37,7 @@ const EditProductForm: React.FC<EditProductFormProps> = ({ product, onSave, onCa
 
     const handleSave = (e: React.FormEvent) => {
         e.preventDefault();
-        onSave(formState);
+        onSave(formState, selectedWarehouseid);
     };
 
     return (
@@ -80,6 +100,16 @@ const EditProductForm: React.FC<EditProductFormProps> = ({ product, onSave, onCa
                     onChange={handleChange}
                     style={{paddingLeft: '10px', alignContent: 'left'}}
                 />
+            </div>
+            <div style={{paddingTop: '10px'}}>
+                <select name="warehouses" value={selectedWarehouseid} onChange={handleWarehouseChange}>
+                    <option value="">Select a Warehouse</option>
+                    {warehouses.map((warehouse) => (
+                        <option key={warehouse.warehouseid} value={warehouse.warehouseid}>
+                            {warehouse.warehouseid}
+                        </option>
+                    ))}
+                </select>
             </div>
             <div style={{float: 'right', paddingTop: '10px'}}>
                 <button type="submit" style={{paddingRight: '10px'}}>Save</button>

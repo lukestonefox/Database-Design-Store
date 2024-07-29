@@ -19,3 +19,9 @@ export interface Customer {
     creditid1: number,
     creditid2: number
 };
+
+export interface WarehouseRow {
+    warehouseid: number;
+    address: string;
+    capacity: number;
+};

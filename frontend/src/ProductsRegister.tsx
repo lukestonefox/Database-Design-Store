@@ -81,7 +81,7 @@ const ProductsRegister: React.FC<ProductsRegisterProps> = ({products, addToOrder
         setSelectedProduct(null);
     };
 
-    const closeEditProduct = async (updatedProduct: Product) => {
+    const closeEditProduct = async (updatedProduct: Product, warehouseid: number) => {
         if (updatedProduct.productid === 0) {
             let newProduct: Product;
             try {
@@ -96,6 +96,7 @@ const ProductsRegister: React.FC<ProductsRegisterProps> = ({products, addToOrder
                 }
                 
                 newProduct = await response.json();
+                updateStockTable(newProduct, warehouseid);
             } catch (error) {
                 console.error('Error adding a new product', error);
             }
@@ -116,19 +117,83 @@ const ProductsRegister: React.FC<ProductsRegisterProps> = ({products, addToOrder
                 }
     
                 const updatedProductFromServer = await response.json();
-    
+
+                updateStockTable(updatedProductFromServer.productid, warehouseid);
+                
                 setItems(prevItems => prevItems.map(item => item.productid === updatedProductFromServer.productid ? updatedProductFromServer : item));
             } catch (error) {
                 console.error('Error updating product', error);
             }
+
+            console.log('updatedProduct: ', updatedProduct);
+            console.log('Warehouseid: ', warehouseid);
         }
         setSelectedProduct(null);
         closeModal();
     };
 
+    const updateStockTable = async (updatedProduct: Product, warehouseid: number) => {
+        try {
+            const response = await fetch(`http://localhost:3000/stock/`);
+            if (!response.ok) {
+                throw new Error('Could not get stock items');
+            }
+            const stockData = await response.json();
+            const stockItem = stockData.filter((item: any) => item.productid === updatedProduct.productid && item.warehouseid === warehouseid);
+            
+            if (stockItem.length === 0) {
+                await addStockItem(updatedProduct.productid, warehouseid);
+            } else {
+                await updateStockItem(updatedProduct.productid, warehouseid, stockItem?.stockCount + 1);
+            }
+        } catch (error) {
+            console.error('There was a problem fetching items in the stock table:', error);
+        }
+    };
+
+    const addStockItem = async (newItemProductid: number, newItemWarehouseid: number) => {
+        const requestBody = JSON.stringify({ productid: newItemProductid, stockCount: Number(1), warehouseid: newItemWarehouseid });
+        try {
+            const response = await fetch('http://localhost:3000/stock', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: requestBody,
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to add a new stock item');
+            }
+
+            // the item that is added has a stockCount of 0 for some reason
+            const newStockItem = await response.json();
+            console.log('Added new stock item: ', newStockItem);
+        } catch (error) {
+            console.error('Error adding a new stock item:', error);
+        }
+    };
+
+    const updateStockItem = async (productid: number, warehouseid: number, stockCount: number) => {
+        try {
+            const response = await fetch(`http://localhost:3000/stock/${productid}/${warehouseid}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ stockCount }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to update an existing stock item');
+            }
+
+            const updatedStockItem = await response.json();
+            console.log('Updated stock item: ', updatedStockItem);
+        } catch (error) {
+            console.error('Error updating stock item: ', error);
+        }
+    };
+
     const handleCancel = () => {
         closeModal();
-    }
+    };
 
     const rowStyle = {
         transition: 'background-color 0.3s ease',

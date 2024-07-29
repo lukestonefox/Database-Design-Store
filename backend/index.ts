@@ -488,6 +488,17 @@ app.put('/stock/:productid', async (req, res) => {
   }
 });
 
+app.put('/stock/:productid/:warehouseid', async (req, res) => {
+  try {
+    const { productid, warehouseid } = req.params;
+    const { stockcount } = req.body;
+    const response = await model.query('UPDATE stock SET stockcount = $1 WHERE productid = $2 AND warehouseid = $3 RETURNING *;', [stockcount, productid, warehouseid]);
+    res.json(response.rows[0]);
+  } catch (error) {
+    console.log(error);
+  }
+})
+
 app.delete('/stock/:productid/:warehouseid', async (req, res) => {
   try {
     const { productid, warehouseid } = req.params;
