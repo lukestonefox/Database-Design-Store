@@ -4,6 +4,7 @@ import { faEllipsisV, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { Product } from "./types";
 import EditProductModal from "./EditProductModal";
 import EditProductForm from "./EditProductForm";
+import { useUserContext } from "./context/UserContext";
 
 interface ProductsRegisterProps {
     products: Product[];
@@ -17,6 +18,7 @@ const ProductsRegister: React.FC<ProductsRegisterProps> = ({products, addToOrder
     const [menuPosition, setMenuPosition] = useState<{top: number; left: number} | null>(null);
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
     const [editProductModalOpen, setModalOpen] = useState(false);
+    const { role } = useUserContext();
 
     useEffect(() => {
         setItems(products);
@@ -68,7 +70,7 @@ const ProductsRegister: React.FC<ProductsRegisterProps> = ({products, addToOrder
     );
 
     const itemSelected = (item: Product) => {
-        // console.log(item);
+        console.log(role);
     };
 
     const openEditProduct = (product: Product) => {
@@ -225,7 +227,9 @@ const ProductsRegister: React.FC<ProductsRegisterProps> = ({products, addToOrder
                     value={searchQuery}
                     onChange={handleSearch}
                 />
-                <button className="px-4 py-2 text-white bg-blue-500 rounded-md" onClick={addProduct}>Add Product</button>
+                {role !== 'customer' && (
+                    <button className="px-4 py-2 text-white bg-blue-500 rounded-md" onClick={addProduct}>Add Product</button>
+                )}
             </div>
             <table style={{width: '100%', borderCollapse: 'collapse', marginTop: '1rem'}}>
                 <thead>
@@ -259,7 +263,9 @@ const ProductsRegister: React.FC<ProductsRegisterProps> = ({products, addToOrder
                                 {menuVisible === item && (
                                     <div style={menuStyle}>
                                         <div style={{padding: '8px', cursor: 'pointer'}} onClick={() => handleAdd(item)}>Add to Order</div>
-                                        <div style={{padding: '8px', cursor: 'pointer'}} onClick={() => handleEdit(item)}>Edit Item</div>
+                                        {role !== 'customer' && (
+                                            <div style={{padding: '8px', cursor: 'pointer'}} onClick={() => handleEdit(item)}>Edit Item</div>
+                                        )}
                                     </div>
                                 )}
                             </td>

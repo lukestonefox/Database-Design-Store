@@ -13,15 +13,68 @@ const OrdersRegister: React.FC<OrdersRegisterProps> = ({ order, removeFromOrder}
     const [items, setItems] = useState<Product[]>(order);
     const [menuVisible, setMenuVisible] = useState<Product | null>(null);
     const [menuPosition, setMenuPosition] = useState<{top: number; left: number} | null>(null);
+    const [totalPrice, setTotalPrice] = useState<number>(0);
 
     useEffect(() => {
         setItems(order);
     }, [order]);
 
+    useEffect(() => {
+        const calculateTotalPrice = () => {
+            return items.reduce((total, item) => total + (item.price || 0), 0);
+        };
+        setTotalPrice(calculateTotalPrice());
+    }, [items]);
+
     const loadOrder = () => {
         console.log(order);
         setItems(order);
     }
+
+    const checkoutOrder = async () => {
+        try {
+            const deliveryPlanResponse = await fetch ('http://localhost:3000/deliveryplan', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json'},
+                body: JSON.stringify({deliverytype: 'order', deliveryprice: totalPrice, shipdate: new Date().toISOString(), deliverydate: new Date().toISOString() })
+            });
+
+            if (!deliveryPlanResponse.ok) {
+                throw new Error('Failed to create a delivery plan');
+            }
+
+            const deliveryPlan = await deliveryPlanResponse.json();
+            const deliveryPlanId = deliveryPlan.deliveryid;
+
+            const orderPromises = items.map(item => 
+                fetch('http://localhost:3000/orders', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        productid: item.productid,
+                        quantity: 1,
+                        status: 'pending',
+                        deliveryid: deliveryPlanId
+                    }),
+                })
+                .then(orderResponse => {
+                    if (!orderResponse.ok) {
+                        throw new Error('Failed to create a new order');
+                    }
+                    return orderResponse.json();
+                })
+                .then(order => removeFromOrder(order.productid))
+                .catch(error => console.error('Error creating order: ', error))
+            );
+
+            await Promise.all(orderPromises)
+
+            console.log('Delivery plan was created successfully');
+            setItems([]);
+        } catch (error) {
+            console.error('Error during checkout: ', error);
+        }
+    };
 
     const handleSearch = (event: any) => {
         setSearchQuery(event.target.value);
@@ -33,9 +86,9 @@ const OrdersRegister: React.FC<OrdersRegisterProps> = ({ order, removeFromOrder}
         setMenuVisible(menuVisible === item ? null : item);
     }
 
-    const removeItem = (item: Product) => {
-        removeFromOrder(item.productid);
-        // TODO: remove item from items list
+    const removeItem = (product: Product) => {
+        removeFromOrder(product.productid);
+        setItems((prevItems) => prevItems.filter(item => item.productid !== product.productid))
     }
 
     const filteredItems = items?.filter((item) =>
@@ -78,6 +131,7 @@ const OrdersRegister: React.FC<OrdersRegisterProps> = ({ order, removeFromOrder}
                     onChange={handleSearch}
                 />
                 <button className="px-4 py-2 text-white bg-blue-500 rounded-md" onClick={() => loadOrder()}>See Order</button>
+                <button className="px-4 py-2 text-white bg-blue-500 rounded-md" onClick={() => checkoutOrder()}>Checkout</button>
             </div>
             <table style={{width: '100%', borderCollapse: 'collapse', marginTop: '1rem'}}>
                 <thead>
