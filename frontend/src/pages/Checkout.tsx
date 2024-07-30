@@ -7,6 +7,8 @@ interface CheckoutProps {
     removeFromOrder: (productId: number) => void;
 }
 
+
+
 const Checkout: React.FC<CheckoutProps> = ({order, removeFromOrder}) => {
 
     return (

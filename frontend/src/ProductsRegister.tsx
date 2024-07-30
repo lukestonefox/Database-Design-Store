@@ -98,7 +98,7 @@ const ProductsRegister: React.FC<ProductsRegisterProps> = ({products, addToOrder
                 }
                 
                 newProduct = await response.json();
-                updateStockTable(newProduct, warehouseid);
+                updateStockTable(newProduct.productid, warehouseid);
             } catch (error) {
                 console.error('Error adding a new product', error);
             }
@@ -134,19 +134,19 @@ const ProductsRegister: React.FC<ProductsRegisterProps> = ({products, addToOrder
         closeModal();
     };
 
-    const updateStockTable = async (updatedProduct: Product, warehouseid: number) => {
+    const updateStockTable = async (updatedProductId: number, warehouseid: number) => {
         try {
             const response = await fetch(`http://localhost:3000/stock/`);
             if (!response.ok) {
                 throw new Error('Could not get stock items');
             }
             const stockData = await response.json();
-            const stockItem = stockData.filter((item: any) => item.productid === updatedProduct.productid && item.warehouseid === warehouseid);
+            const stockItem = stockData.filter((item: any) => item.productid === updatedProductId && item.warehouseid === warehouseid);
             
             if (stockItem.length === 0) {
-                await addStockItem(updatedProduct.productid, warehouseid);
+                await addStockItem(updatedProductId, warehouseid);
             } else {
-                await updateStockItem(updatedProduct.productid, warehouseid, stockItem?.stockCount + 1);
+                await updateStockItem(updatedProductId, warehouseid, stockItem[0]?.stockcount + 1);
             }
         } catch (error) {
             console.error('There was a problem fetching items in the stock table:', error);
@@ -154,7 +154,7 @@ const ProductsRegister: React.FC<ProductsRegisterProps> = ({products, addToOrder
     };
 
     const addStockItem = async (newItemProductid: number, newItemWarehouseid: number) => {
-        const requestBody = JSON.stringify({ productid: newItemProductid, stockCount: Number(1), warehouseid: newItemWarehouseid });
+        const requestBody = JSON.stringify({ productid: newItemProductid, stockcount: 1, warehouseid: newItemWarehouseid });
         try {
             const response = await fetch('http://localhost:3000/stock', {
                 method: 'POST',
@@ -179,7 +179,7 @@ const ProductsRegister: React.FC<ProductsRegisterProps> = ({products, addToOrder
             const response = await fetch(`http://localhost:3000/stock/${productid}/${warehouseid}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ stockCount }),
+                body: JSON.stringify({ stockcount: stockCount }),
             });
 
             if (!response.ok) {

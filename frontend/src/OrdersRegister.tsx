@@ -131,7 +131,7 @@ const OrdersRegister: React.FC<OrdersRegisterProps> = ({ order, removeFromOrder}
                     onChange={handleSearch}
                 />
                 <button className="px-4 py-2 text-white bg-blue-500 rounded-md" onClick={() => loadOrder()}>See Order</button>
-                <button className="px-4 py-2 text-white bg-blue-500 rounded-md" onClick={() => checkoutOrder()}>Checkout</button>
+                <button className="px-4 py-2 text-white bg-blue-500 rounded-md" onClick={() => checkoutOrder()}>Place Order</button>
             </div>
             <table style={{width: '100%', borderCollapse: 'collapse', marginTop: '1rem'}}>
                 <thead>

@@ -497,7 +497,7 @@ app.put('/stock/:productid/:warehouseid', async (req, res) => {
   } catch (error) {
     console.log(error);
   }
-})
+});
 
 app.delete('/stock/:productid/:warehouseid', async (req, res) => {
   try {
